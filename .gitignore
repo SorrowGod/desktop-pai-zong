@@ -4,6 +4,8 @@ dist/
 target/
 **/target/
 .codex-target*/
+.dotnet-home/
+.nuget/
 
 # .NET build and publish output
 bin/

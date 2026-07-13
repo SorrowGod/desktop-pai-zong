@@ -53,6 +53,8 @@ public partial class SettingsWindow : Window
 
         Show();
         Activate();
+        Topmost = true;
+        Topmost = false;
         Focus();
     }
 

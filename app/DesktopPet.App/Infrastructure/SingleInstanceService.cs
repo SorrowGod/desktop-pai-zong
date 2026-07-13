@@ -1,5 +1,6 @@
 using System.IO.Pipes;
 using System.Security.Cryptography;
+using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Text;
 
@@ -13,11 +14,13 @@ public sealed class SingleInstanceService : IDisposable
     private Task? _listener;
     private bool _disposed;
 
-    public SingleInstanceService()
+    public SingleInstanceService(string? instanceId = null)
     {
         var identity = WindowsIdentity.GetCurrent().User?.Value
             ?? Environment.UserName;
-        var suffix = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(identity)))[..16];
+        var discriminator = string.IsNullOrWhiteSpace(instanceId) ? "DesktopPet" : instanceId;
+        var suffix = Convert.ToHexString(
+            SHA256.HashData(Encoding.UTF8.GetBytes($"{identity}|{discriminator}")))[..16];
         _pipeName = $"DesktopPet-{suffix}";
         _mutex = new Mutex(true, $"Local\\DesktopPet-{suffix}", out var isFirstInstance);
         IsFirstInstance = isFirstInstance;
@@ -36,6 +39,8 @@ public sealed class SingleInstanceService : IDisposable
         _listener = ListenAsync(handleCommand, _shutdown.Token);
     }
 
+    public Task? ListenerTask => _listener;
+
     public async Task SignalPrimaryAsync(string command, CancellationToken cancellationToken = default)
     {
         if (IsFirstInstance)
@@ -43,17 +48,44 @@ public sealed class SingleInstanceService : IDisposable
             return;
         }
 
-        using var client = new NamedPipeClientStream(
-            ".",
-            _pipeName,
-            PipeDirection.Out,
-            PipeOptions.Asynchronous);
-        await client.ConnectAsync(2_000, cancellationToken);
-        await using var writer = new StreamWriter(client, new UTF8Encoding(false), leaveOpen: false)
+        NamedPipeClientStream client;
+        try
         {
-            AutoFlush = true
-        };
-        await writer.WriteLineAsync(command.AsMemory(), cancellationToken);
+            client = new NamedPipeClientStream(
+                ".",
+                _pipeName,
+                PipeDirection.Out,
+                PipeOptions.Asynchronous);
+        }
+        catch (Exception exception)
+        {
+            throw new InvalidOperationException($"Named pipe client creation failed (0x{exception.HResult:X8}).", exception);
+        }
+
+        using (client)
+        {
+            try
+            {
+                await client.ConnectAsync(2_000, cancellationToken);
+            }
+            catch (Exception exception)
+            {
+                throw new InvalidOperationException($"Named pipe connection failed (0x{exception.HResult:X8}).", exception);
+            }
+
+            try
+            {
+                await using var writer = new StreamWriter(client, new UTF8Encoding(false), leaveOpen: false)
+                {
+                    AutoFlush = true
+                };
+                await writer.WriteLineAsync(command.AsMemory(), cancellationToken);
+            }
+            catch (Exception exception)
+            {
+                throw new InvalidOperationException($"Named pipe write failed (0x{exception.HResult:X8}).", exception);
+            }
+        }
     }
 
     private async Task ListenAsync(Func<string, Task> handleCommand, CancellationToken cancellationToken)
@@ -62,12 +94,27 @@ public sealed class SingleInstanceService : IDisposable
         {
             try
             {
-                await using var server = new NamedPipeServerStream(
+                var currentUser = WindowsIdentity.GetCurrent().User
+                    ?? throw new InvalidOperationException("无法读取当前用户 SID。");
+                var security = new PipeSecurity();
+                security.SetAccessRuleProtection(isProtected: true, preserveInheritance: false);
+                security.AddAccessRule(new PipeAccessRule(
+                    currentUser,
+                    PipeAccessRights.FullControl,
+                    AccessControlType.Allow));
+                security.AddAccessRule(new PipeAccessRule(
+                    new SecurityIdentifier(WellKnownSidType.LocalSystemSid, null),
+                    PipeAccessRights.FullControl,
+                    AccessControlType.Allow));
+                await using var server = NamedPipeServerStreamAcl.Create(
                     _pipeName,
                     PipeDirection.In,
                     1,
                     PipeTransmissionMode.Byte,
-                    PipeOptions.Asynchronous | PipeOptions.CurrentUserOnly);
+                    PipeOptions.Asynchronous,
+                    0,
+                    0,
+                    security);
                 await server.WaitForConnectionAsync(cancellationToken);
                 using var reader = new StreamReader(server, Encoding.UTF8, true, leaveOpen: true);
                 var command = await reader.ReadLineAsync(cancellationToken);

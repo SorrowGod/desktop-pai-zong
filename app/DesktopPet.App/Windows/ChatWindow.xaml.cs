@@ -164,7 +164,9 @@ public partial class ChatWindow : Window
                 Messages.Remove(assistantMessage);
             }
 
-            StatusText.Text = "已停止";
+            StatusText.Text = _requestCancellation?.IsCancellationRequested == true
+                ? "已停止"
+                : "请求超时，请稍后重试。";
         }
         catch (TimeoutException exception)
         {

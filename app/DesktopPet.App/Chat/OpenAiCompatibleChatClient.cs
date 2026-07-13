@@ -126,7 +126,8 @@ public sealed class OpenAiCompatibleChatClient(HttpClient httpClient) : IChatCom
             message.Headers.Authorization = new AuthenticationHeaderValue("Bearer", apiKey.Trim());
         }
 
-        message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(
+            request.Stream ? "text/event-stream" : "application/json"));
         return message;
     }
 

@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 using DesktopPet.App.Native;
 using DesktopPet.App.Pet;
 
@@ -27,7 +28,7 @@ public partial class PetWindow : Window
         InitializeComponent();
         SourceInitialized += OnSourceInitialized;
         Loaded += OnLoaded;
-        SizeChanged += (_, _) => Dispatcher.BeginInvoke(ApplyRegion);
+        SizeChanged += (_, _) => ScheduleRegionUpdate();
         PetImage.MouseLeftButtonDown += OnLeftButtonDown;
         PetImage.MouseMove += OnMouseMove;
         PetImage.MouseLeftButtonUp += OnLeftButtonUp;
@@ -44,6 +45,7 @@ public partial class PetWindow : Window
     public event EventHandler? SettingsRequested;
     public event EventHandler? HideRequested;
     public event EventHandler? ExitRequested;
+    public event EventHandler? ContextMenuOpened;
     public event EventHandler<(int X, int Y)>? PositionCommitted;
 
     public void SetPetScale(double scale)
@@ -56,7 +58,7 @@ public partial class PetWindow : Window
     {
         _frame = frame;
         PetImage.Source = frame;
-        Dispatcher.BeginInvoke(ApplyRegion);
+        ScheduleRegionUpdate();
     }
 
     internal NativeMethods.Rect GetPhysicalBounds()
@@ -117,7 +119,7 @@ public partial class PetWindow : Window
 
         if (message == NativeMethods.WmDpiChanged)
         {
-            Dispatcher.BeginInvoke(ApplyRegion);
+            ScheduleRegionUpdate();
         }
 
         return IntPtr.Zero;
@@ -202,9 +204,15 @@ public partial class PetWindow : Window
         }
     }
 
+    private void ScheduleRegionUpdate()
+    {
+        _ = Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, ApplyRegion);
+    }
+
     private void BuildContextMenu()
     {
         var menu = new ContextMenu();
+        menu.Opened += (_, _) => ContextMenuOpened?.Invoke(this, EventArgs.Empty);
         menu.Items.Add(CreateMenuItem("喂食", () => FeedRequested?.Invoke(this, EventArgs.Empty)));
         menu.Items.Add(CreateMenuItem("抚摸", () => PetRequested?.Invoke(this, EventArgs.Empty)));
         menu.Items.Add(CreateMenuItem("玩耍", () => PlayRequested?.Invoke(this, EventArgs.Empty)));

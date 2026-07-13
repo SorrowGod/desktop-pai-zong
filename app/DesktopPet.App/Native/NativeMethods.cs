@@ -141,38 +141,32 @@ internal static class AlphaRegionBuilder
         var transferred = false;
         try
         {
-            for (var outputY = 0; outputY < outputHeight; outputY++)
+            foreach (var rectangle in AlphaRegionGeometry.BuildRuns(
+                         pixels,
+                         converted.PixelWidth,
+                         converted.PixelHeight,
+                         stride,
+                         outputWidth,
+                         outputHeight,
+                         alphaThreshold))
             {
-                var sourceY = Math.Min(converted.PixelHeight - 1, outputY * converted.PixelHeight / outputHeight);
-                var runStart = -1;
-                for (var outputX = 0; outputX <= outputWidth; outputX++)
+                var run = NativeMethods.CreateRectRgn(
+                    rectangle.Left,
+                    rectangle.Top,
+                    rectangle.Right,
+                    rectangle.Bottom);
+                if (run != IntPtr.Zero)
                 {
-                    var visible = false;
-                    if (outputX < outputWidth)
-                    {
-                        var sourceX = Math.Min(converted.PixelWidth - 1, outputX * converted.PixelWidth / outputWidth);
-                        visible = pixels[sourceY * stride + sourceX * 4 + 3] >= alphaThreshold;
-                    }
-
-                    if (visible && runStart < 0)
-                    {
-                        runStart = outputX;
-                    }
-                    else if (!visible && runStart >= 0)
-                    {
-                        var run = NativeMethods.CreateRectRgn(runStart, outputY, outputX, outputY + 1);
-                        if (run != IntPtr.Zero)
-                        {
-                            NativeMethods.CombineRgn(destination, destination, run, NativeMethods.RgnOr);
-                            NativeMethods.DeleteObject(run);
-                        }
-
-                        runStart = -1;
-                    }
+                    NativeMethods.CombineRgn(destination, destination, run, NativeMethods.RgnOr);
+                    NativeMethods.DeleteObject(run);
                 }
             }
 
             transferred = NativeMethods.SetWindowRgn(handle, destination, true) != 0;
+            if (!transferred)
+            {
+                throw new Win32Exception(Marshal.GetLastWin32Error(), "无法应用猫咪 Alpha 窗口区域。");
+            }
         }
         finally
         {
@@ -182,4 +176,59 @@ internal static class AlphaRegionBuilder
             }
         }
     }
+}
+
+internal readonly record struct AlphaRun(int Left, int Top, int Right, int Bottom);
+
+internal static class AlphaRegionGeometry
+{
+    public static IReadOnlyList<AlphaRun> BuildRuns(
+        byte[] bgraPixels,
+        int sourceWidth,
+        int sourceHeight,
+        int stride,
+        int outputWidth,
+        int outputHeight,
+        byte alphaThreshold)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(sourceWidth);
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(sourceHeight);
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(outputWidth);
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(outputHeight);
+        if (stride < sourceWidth * 4 || bgraPixels.Length < stride * sourceHeight)
+        {
+            throw new ArgumentException("BGRA pixel buffer is smaller than the declared dimensions.", nameof(bgraPixels));
+        }
+
+        var result = new List<AlphaRun>();
+        for (var outputY = 0; outputY < outputHeight; outputY++)
+        {
+            var sourceY = Math.Min(sourceHeight - 1, outputY * sourceHeight / outputHeight);
+            var runStart = -1;
+            for (var outputX = 0; outputX <= outputWidth; outputX++)
+            {
+                var visible = false;
+                if (outputX < outputWidth)
+                {
+                    var sourceX = Math.Min(sourceWidth - 1, outputX * sourceWidth / outputWidth);
+                    visible = bgraPixels[sourceY * stride + sourceX * 4 + 3] >= alphaThreshold;
+                }
+
+                if (visible && runStart < 0)
+                {
+                    runStart = outputX;
+                }
+                else if (!visible && runStart >= 0)
+                {
+                    result.Add(new AlphaRun(runStart, outputY, outputX, outputY + 1));
+                    runStart = -1;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    public static bool Contains(IReadOnlyList<AlphaRun> runs, int x, int y) =>
+        runs.Any(run => x >= run.Left && x < run.Right && y >= run.Top && y < run.Bottom);
 }

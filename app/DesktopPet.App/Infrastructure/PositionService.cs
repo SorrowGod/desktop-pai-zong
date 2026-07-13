@@ -26,10 +26,36 @@ internal static class PositionService
 
     public static Point EnsurePartiallyVisible(int x, int y, int width, int height)
     {
-        var virtualScreen = System.Windows.Forms.SystemInformation.VirtualScreen;
         var minimumVisible = Math.Min(32, Math.Max(8, Math.Min(width, height) / 3));
-        var left = Math.Clamp(x, virtualScreen.Left - width + minimumVisible, virtualScreen.Right - minimumVisible);
-        var top = Math.Clamp(y, virtualScreen.Top - height + minimumVisible, virtualScreen.Bottom - minimumVisible);
+        var proposed = new Rectangle(x, y, width, height);
+        var screens = Screen.AllScreens;
+        if (screens.Any(screen =>
+            {
+                var intersection = Rectangle.Intersect(proposed, screen.Bounds);
+                return intersection.Width >= minimumVisible && intersection.Height >= minimumVisible;
+            }))
+        {
+            return new Point(x, y);
+        }
+
+        var centerX = x + width / 2;
+        var centerY = y + height / 2;
+        var target = screens
+            .OrderBy(screen => DistanceSquaredToRectangle(centerX, centerY, screen.Bounds))
+            .FirstOrDefault()
+            ?? Screen.PrimaryScreen;
+        var bounds = target?.Bounds ?? System.Windows.Forms.SystemInformation.VirtualScreen;
+        var left = Math.Clamp(x, bounds.Left - width + minimumVisible, bounds.Right - minimumVisible);
+        var top = Math.Clamp(y, bounds.Top - height + minimumVisible, bounds.Bottom - minimumVisible);
         return new Point(left, top);
+    }
+
+    private static long DistanceSquaredToRectangle(int x, int y, Rectangle rectangle)
+    {
+        var closestX = Math.Clamp(x, rectangle.Left, rectangle.Right);
+        var closestY = Math.Clamp(y, rectangle.Top, rectangle.Bottom);
+        var deltaX = (long)x - closestX;
+        var deltaY = (long)y - closestY;
+        return deltaX * deltaX + deltaY * deltaY;
     }
 }

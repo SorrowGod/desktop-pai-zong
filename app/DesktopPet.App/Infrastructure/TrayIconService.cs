@@ -9,6 +9,7 @@ public sealed class TrayIconService : IDisposable
 
     public TrayIconService(
         Action togglePet,
+        Action showPet,
         Action openChat,
         Action openSettings,
         Action showAbout,
@@ -31,7 +32,7 @@ public sealed class TrayIconService : IDisposable
             ContextMenuStrip = menu,
             Visible = true
         };
-        _notifyIcon.DoubleClick += (_, _) => togglePet();
+        _notifyIcon.DoubleClick += (_, _) => showPet();
     }
 
     public void Dispose()

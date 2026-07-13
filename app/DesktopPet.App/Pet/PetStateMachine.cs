@@ -33,6 +33,7 @@ public sealed class PetStateMachine : IDisposable
     public void Enter(PetAnimationState state, TimeSpan? returnToIdleAfter = null)
     {
         CancellationToken token;
+        var changed = false;
         lock (_sync)
         {
             ThrowIfDisposed();
@@ -40,7 +41,12 @@ public sealed class PetStateMachine : IDisposable
             _scheduledTransition?.Dispose();
             _scheduledTransition = new CancellationTokenSource();
             token = _scheduledTransition.Token;
-            SetStateLocked(state);
+            changed = SetStateLocked(state);
+        }
+
+        if (changed)
+        {
+            StateChanged?.Invoke(this, state);
         }
 
         if (returnToIdleAfter is not null)
@@ -75,12 +81,18 @@ public sealed class PetStateMachine : IDisposable
         try
         {
             await Task.Delay(_sleepDelay, cancellationToken);
+            var changed = false;
             lock (_sync)
             {
                 if (!_disposed && !cancellationToken.IsCancellationRequested && State == PetAnimationState.Idle)
                 {
-                    SetStateLocked(PetAnimationState.Sleep);
+                    changed = SetStateLocked(PetAnimationState.Sleep);
                 }
+            }
+
+            if (changed)
+            {
+                StateChanged?.Invoke(this, PetAnimationState.Sleep);
             }
         }
         catch (OperationCanceledException)
@@ -88,15 +100,15 @@ public sealed class PetStateMachine : IDisposable
         }
     }
 
-    private void SetStateLocked(PetAnimationState state)
+    private bool SetStateLocked(PetAnimationState state)
     {
         if (State == state)
         {
-            return;
+            return false;
         }
 
         State = state;
-        StateChanged?.Invoke(this, state);
+        return true;
     }
 
     private void ThrowIfDisposed()

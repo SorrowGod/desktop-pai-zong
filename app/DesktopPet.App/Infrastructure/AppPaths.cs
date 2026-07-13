@@ -4,9 +4,17 @@ public sealed class AppPaths
 {
     public AppPaths(string? dataRoot = null)
     {
-        DataRoot = dataRoot ?? Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "DesktopPet");
+#if DEBUG
+        var diagnosticRoot = Environment.GetEnvironmentVariable("DESKTOPPET_DATA_ROOT");
+#else
+        const string? diagnosticRoot = null;
+#endif
+        DataRoot = dataRoot
+            ?? (!string.IsNullOrWhiteSpace(diagnosticRoot)
+                ? diagnosticRoot
+                : Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                    "DesktopPet"));
         SettingsFile = Path.Combine(DataRoot, "settings.json");
         ChatHistoryFile = Path.Combine(DataRoot, "chat-history.json");
         LogsDirectory = Path.Combine(DataRoot, "logs");

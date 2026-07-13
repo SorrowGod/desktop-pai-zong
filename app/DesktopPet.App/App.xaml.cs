@@ -46,11 +46,12 @@ public partial class App : System.Windows.Application
         };
 
         _singleInstance = new SingleInstanceService();
+        var startupCommand = GetStartupCommand(eventArgs.Args);
         if (!_singleInstance.IsFirstInstance)
         {
             try
             {
-                await _singleInstance.SignalPrimaryAsync("show");
+                await _singleInstance.SignalPrimaryAsync(startupCommand);
             }
             catch (Exception exception)
             {
@@ -63,6 +64,11 @@ public partial class App : System.Windows.Application
         }
 
         _singleInstance.StartListening(command => Dispatcher.InvokeAsync(() => HandleInstanceCommand(command)).Task);
+        _ = _singleInstance.ListenerTask?.ContinueWith(
+            task => _logger.Error("Single-instance pipe listener stopped unexpectedly.", task.Exception),
+            CancellationToken.None,
+            TaskContinuationOptions.OnlyOnFaulted,
+            TaskScheduler.Default);
         _settingsService = new SettingsService(_paths, new DpapiSecretProtector());
         _historyService = new ChatHistoryService(_paths);
         _autoStartManager = new AutoStartManager();
@@ -95,10 +101,12 @@ public partial class App : System.Windows.Application
 
         _trayIcon = new TrayIconService(
             TogglePet,
+            ShowPet,
             OpenChat,
             OpenSettings,
             ShowAbout,
             () => _ = ExitAsync());
+        HandleInstanceCommand(startupCommand);
         _logger.Info("DesktopPet started.");
     }
 
@@ -109,8 +117,16 @@ public partial class App : System.Windows.Application
             return;
         }
 
-        _petWindow.SingleClicked += (_, _) => HandleInteraction(1, PetAnimationState.Reaction, "喵~", "我在这里！", "今天也要开心呀~");
-        _petWindow.DoubleClicked += (_, _) => OpenChat();
+        _petWindow.SingleClicked += (_, _) =>
+        {
+            _logger?.Info("Pet single click received.");
+            HandleInteraction(1, PetAnimationState.Reaction, "喵~", "我在这里！", "今天也要开心呀~");
+        };
+        _petWindow.DoubleClicked += (_, _) =>
+        {
+            _logger?.Info("Pet double click received.");
+            OpenChat();
+        };
         _petWindow.FeedRequested += (_, _) => HandleInteraction(5, PetAnimationState.Happy, "好香呀，喵！", "吃饱啦~");
         _petWindow.PetRequested += (_, _) => HandleInteraction(3, PetAnimationState.Happy, "呼噜呼噜…", "再摸一下嘛~");
         _petWindow.PlayRequested += (_, _) => HandleInteraction(8, PetAnimationState.Walk, "一起玩！", "看我原地散步~");
@@ -122,6 +138,7 @@ public partial class App : System.Windows.Application
         {
             if (_stateMachine?.State != PetAnimationState.Drag)
             {
+                _logger?.Info("Pet drag started.");
                 _stateMachine?.Enter(PetAnimationState.Drag);
             }
 
@@ -130,7 +147,12 @@ public partial class App : System.Windows.Application
                 _bubbleWindow.Follow(_petWindow.GetPhysicalBounds());
             }
         };
-        _petWindow.DragEnded += (_, _) => _stateMachine?.NotifyInteraction();
+        _petWindow.DragEnded += (_, _) =>
+        {
+            _logger?.Info("Pet drag ended.");
+            _stateMachine?.NotifyInteraction();
+        };
+        _petWindow.ContextMenuOpened += (_, _) => _logger?.Info("Pet context menu opened.");
         _petWindow.PositionCommitted += (_, position) =>
         {
             if (_settings is null)
@@ -274,10 +296,37 @@ public partial class App : System.Windows.Application
 
     private void HandleInstanceCommand(string command)
     {
-        if (command.Equals("show", StringComparison.OrdinalIgnoreCase))
+        switch (command.ToLowerInvariant())
         {
-            ShowPet();
+            case "chat":
+                OpenChat();
+                break;
+            case "settings":
+                OpenSettings();
+                break;
+            case "hide":
+                HidePet();
+                break;
+            case "exit":
+                _ = ExitAsync();
+                break;
+            default:
+                ShowPet();
+                break;
         }
+    }
+
+    private static string GetStartupCommand(IReadOnlyList<string> arguments)
+    {
+        var command = arguments.FirstOrDefault(argument => argument.StartsWith("--", StringComparison.Ordinal));
+        return command?.TrimStart('-').ToLowerInvariant() switch
+        {
+            "chat" => "chat",
+            "settings" => "settings",
+            "hide" => "hide",
+            "exit" => "exit",
+            _ => "show"
+        };
     }
 
     private async Task ExitAsync()

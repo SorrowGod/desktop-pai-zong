@@ -1,0 +1,74 @@
+<Window x:Class="DesktopPet.App.Windows.ChatWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="和猫咪聊天"
+        Width="620" Height="720"
+        MinWidth="480" MinHeight="560"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource SurfaceBrush}">
+  <Grid Margin="18">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <Grid Grid.Row="0" Margin="2,0,2,12">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="Auto" />
+      </Grid.ColumnDefinitions>
+      <StackPanel>
+        <TextBlock x:Name="TitleText" FontSize="22" FontWeight="SemiBold" Foreground="{StaticResource TextBrush}" />
+        <TextBlock Text="OpenAI-compatible Chat Completions · 流式回复" Foreground="#796E7D" Margin="0,3,0,0" />
+      </StackPanel>
+      <Button Grid.Column="1" Content="清空历史" Click="ClearHistory_Click" VerticalAlignment="Center" />
+    </Grid>
+
+    <ListBox x:Name="MessagesList"
+             Grid.Row="1"
+             ItemsSource="{Binding Messages}"
+             BorderThickness="0"
+             Background="Transparent"
+             HorizontalContentAlignment="Stretch"
+             ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+      <ListBox.ItemTemplate>
+        <DataTemplate>
+          <Border Background="White"
+                  BorderBrush="#F0D6DF"
+                  BorderThickness="1"
+                  CornerRadius="12"
+                  Margin="2,4"
+                  Padding="12">
+            <StackPanel>
+              <TextBlock Text="{Binding Speaker}" FontWeight="SemiBold" Foreground="{StaticResource PrimaryDarkBrush}" />
+              <TextBlock Text="{Binding Content}" TextWrapping="Wrap" Margin="0,5,0,0" Foreground="{StaticResource TextBrush}" />
+            </StackPanel>
+          </Border>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>
+
+    <TextBox x:Name="InputBox"
+             Grid.Row="2"
+             MinHeight="88"
+             MaxHeight="180"
+             AcceptsReturn="True"
+             TextWrapping="Wrap"
+             VerticalScrollBarVisibility="Auto"
+             PreviewKeyDown="InputBox_PreviewKeyDown"
+             ToolTip="Enter 发送，Shift+Enter 换行" />
+
+    <Grid Grid.Row="3">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="Auto" />
+        <ColumnDefinition Width="Auto" />
+      </Grid.ColumnDefinitions>
+      <TextBlock x:Name="StatusText" VerticalAlignment="Center" Foreground="#796E7D" Text="就绪" />
+      <Button x:Name="StopButton" Grid.Column="1" Content="停止生成" Click="Stop_Click" IsEnabled="False" />
+      <Button x:Name="SendButton" Grid.Column="2" Content="发送" Click="Send_Click" Background="{StaticResource PrimaryBrush}" Foreground="White" />
+    </Grid>
+  </Grid>
+</Window>

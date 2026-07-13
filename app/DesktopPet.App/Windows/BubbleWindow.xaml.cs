@@ -39,6 +39,14 @@ public partial class BubbleWindow : Window
         _hideTimer.Start();
     }
 
+    internal void Follow(NativeMethods.Rect petBounds)
+    {
+        if (IsVisible)
+        {
+            PlaceNear(petBounds);
+        }
+    }
+
     public void Stop()
     {
         _hideTimer.Stop();

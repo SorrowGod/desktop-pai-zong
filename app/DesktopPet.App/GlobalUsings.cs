@@ -1,3 +1,4 @@
 global using System.IO;
 global using System.Net.Http;
 global using System.Security.Authentication;
+global using System.Text.Json;

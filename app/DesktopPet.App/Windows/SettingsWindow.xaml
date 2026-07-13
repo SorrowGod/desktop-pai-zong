@@ -1,0 +1,87 @@
+<Window x:Class="DesktopPet.App.Windows.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="桌面猫咪设置"
+        Width="620" Height="760"
+        MinWidth="520" MinHeight="640"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource SurfaceBrush}">
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <Grid Margin="22">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+      </Grid.RowDefinitions>
+
+      <StackPanel Grid.Row="0">
+        <TextBlock Text="桌面猫咪设置" FontSize="24" FontWeight="SemiBold" Foreground="{StaticResource TextBrush}" />
+        <TextBlock Text="配置保存在当前用户本地目录；API Key 使用 Windows DPAPI 加密。" Foreground="#796E7D" Margin="0,4,0,16" />
+      </StackPanel>
+
+      <GroupBox Grid.Row="1" Header="猫咪" Margin="0,0,0,14" Padding="14">
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="18" />
+            <ColumnDefinition Width="*" />
+          </Grid.ColumnDefinitions>
+          <StackPanel>
+            <TextBlock Text="名字" />
+            <TextBox x:Name="PetNameBox" MaxLength="30" />
+          </StackPanel>
+          <StackPanel Grid.Column="2">
+            <TextBlock Text="大小" />
+            <ComboBox x:Name="PetScaleBox" Margin="0,4,0,10" Padding="8,6" SelectedValuePath="Tag">
+              <ComboBoxItem Content="小（100%）" Tag="1" />
+              <ComboBoxItem Content="中（150%）" Tag="1.5" />
+              <ComboBoxItem Content="大（200%）" Tag="2" />
+              <ComboBoxItem Content="特大（250%）" Tag="2.5" />
+            </ComboBox>
+          </StackPanel>
+        </Grid>
+      </GroupBox>
+
+      <GroupBox Grid.Row="2" Header="AI · OpenAI-compatible Chat Completions" Margin="0,0,0,14" Padding="14">
+        <StackPanel>
+          <TextBlock Text="API 地址" />
+          <TextBox x:Name="ApiBaseBox" />
+          <TextBlock Text="接受 /v1 基础地址或完整 /chat/completions 地址。远程服务必须使用 HTTPS。" Foreground="#796E7D" TextWrapping="Wrap" Margin="0,-6,0,8" />
+          <TextBlock Text="API Key" />
+          <PasswordBox x:Name="ApiKeyBox" />
+          <TextBlock Text="模型" />
+          <TextBox x:Name="ModelBox" />
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button x:Name="TestButton" Content="测试 API" Click="TestApi_Click" />
+          </StackPanel>
+          <TextBlock x:Name="ApiTestText" TextWrapping="Wrap" Foreground="#796E7D" Margin="4,4,4,0" />
+        </StackPanel>
+      </GroupBox>
+
+      <StackPanel Grid.Row="3">
+        <GroupBox Header="系统与数据" Padding="14" Margin="0,0,0,14">
+          <StackPanel>
+            <CheckBox x:Name="AutoStartBox" Content="登录 Windows 时自动启动" Margin="0,0,0,10" />
+            <WrapPanel>
+              <Button Content="创建桌面快捷方式" Click="CreateShortcut_Click" />
+              <Button Content="打开日志目录" Click="OpenLogs_Click" />
+              <Button Content="清空聊天历史" Click="ClearHistory_Click" />
+              <Button Content="清除本地数据" Click="ClearLocalData_Click" />
+            </WrapPanel>
+          </StackPanel>
+        </GroupBox>
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+          </Grid.ColumnDefinitions>
+          <TextBlock x:Name="StatusText" VerticalAlignment="Center" Foreground="#796E7D" TextWrapping="Wrap" />
+          <Button Grid.Column="1" Content="取消" Click="Cancel_Click" />
+          <Button Grid.Column="2" Content="保存" Click="Save_Click" Background="{StaticResource PrimaryBrush}" Foreground="White" />
+        </Grid>
+      </StackPanel>
+    </Grid>
+  </ScrollViewer>
+</Window>

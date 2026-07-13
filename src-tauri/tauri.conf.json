@@ -1,0 +1,46 @@
+{
+  "$schema": "https://raw.githubusercontent.com/nicktomlin/tauri/tauri-v2/crates/tauri-config-schema/schema.json",
+  "productName": "桌面猫咪",
+  "version": "1.0.0",
+  "identifier": "com.desktop-pet.app",
+  "build": {
+    "frontendDist": "../dist",
+    "devUrl": "http://localhost:1420",
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "桌面猫咪",
+        "transparent": true,
+        "backgroundColor": "#00000000",
+        "decorations": false,
+        "shadow": false,
+        "alwaysOnTop": true,
+        "resizable": false,
+        "skipTaskbar": true,
+        "fullscreen": false,
+        "width": 180,
+        "height": 180
+      }
+    ],
+    "trayIcon": {
+      "iconPath": "icons/icon.png",
+      "iconAsTemplate": true
+    },
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/icon.png",
+      "icons/icon.ico"
+    ]
+  }
+}

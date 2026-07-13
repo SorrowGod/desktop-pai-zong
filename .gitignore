@@ -1,0 +1,62 @@
+# Legacy JavaScript / Rust build output
+node_modules/
+dist/
+target/
+**/target/
+.codex-target*/
+
+# .NET build and publish output
+bin/
+obj/
+**/bin/
+**/obj/
+publish/
+artifacts/
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+
+# Installer output
+installer/output/
+installer/Output/
+installer/*.exe
+installer/*.msi
+DesktopPet-Setup-*.exe
+
+# Runtime data and logs
+logs/
+*.log
+settings.json
+chat-history.json
+*.corrupt-*
+*.tmp
+*.bak
+
+# Secrets and credentials
+.env
+.env.*
+!.env.example
+*.key
+*.keys
+*.secret
+*.secrets
+secrets.json
+appsettings.Development.json
+credentials.json
+
+# IDE / local agent state
+.vs/
+.vscode/
+.idea/
+.claude/
+.agents/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# OS noise
+Thumbs.db
+Desktop.ini
+.DS_Store

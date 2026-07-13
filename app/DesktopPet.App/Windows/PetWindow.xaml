@@ -1,0 +1,21 @@
+<Window x:Class="DesktopPet.App.Windows.PetWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="DesktopPet"
+        Width="128" Height="128"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ShowInTaskbar="False"
+        ShowActivated="False"
+        Topmost="True"
+        SnapsToDevicePixels="True"
+        UseLayoutRounding="True">
+  <Grid Background="Transparent">
+    <Image x:Name="PetImage"
+           Stretch="Fill"
+           RenderOptions.BitmapScalingMode="NearestNeighbor"
+           SnapsToDevicePixels="True" />
+  </Grid>
+</Window>

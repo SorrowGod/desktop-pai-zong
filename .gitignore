@@ -6,6 +6,8 @@ target/
 .codex-target*/
 .dotnet-home/
 .nuget/
+.gui-test-data/
+artifacts/gui-validation/
 
 # .NET build and publish output
 bin/

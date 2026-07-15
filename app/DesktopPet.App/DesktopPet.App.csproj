@@ -7,7 +7,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <ApplicationIcon>..\..\src-tauri\icons\icon.ico</ApplicationIcon>
+    <ApplicationIcon>Assets\DesktopPet.ico</ApplicationIcon>
     <AssemblyName>DesktopPet</AssemblyName>
     <RootNamespace>DesktopPet.App</RootNamespace>
     <Version>1.0.0</Version>
@@ -20,6 +20,6 @@
     <PublishTrimmed>false</PublishTrimmed>
   </PropertyGroup>
   <ItemGroup>
-    <Resource Include="..\..\public\cat-sprites.png" Link="Assets\cat-sprites.png" />
+    <Resource Include="Assets\cat-sprites.png" />
   </ItemGroup>
 </Project>

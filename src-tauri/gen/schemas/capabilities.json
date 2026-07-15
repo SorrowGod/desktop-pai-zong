@@ -1,1 +1,0 @@
-{"default":{"identifier":"default","description":"Permissions required by the desktop pet main window.","local":true,"windows":["main","chat","settings"],"permissions":["core:default","core:event:default","core:window:default","core:window:allow-set-position","core:webview:default","core:webview:allow-set-webview-background-color"]}}

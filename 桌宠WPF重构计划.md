@@ -4,7 +4,7 @@
 
 - 在 `D:\TestMimo` 中使用 C#、.NET 8、原生 WPF 从头实现稳定、完整、可安装的 Windows 桌宠。
 - 不延续旧 Tauri/Vite/Rust 的透明 WebView、白色色键、全屏透明窗、光标轮询或阻塞式拖拽方案。
-- 新版实际交付并由用户亲自验收前，完整保留旧 Tauri/Vite/Rust 源码与资源。
+- 旧 Tauri/Vite/Rust 源码通过 `main` 分支和 `legacy-tauri-v1` 标签留档，不再保留在当前 WPF 工作树中。
 - 首次启动使用 `%LOCALAPPDATA%\DesktopPet` 下的全新配置，不迁移旧 WebView localStorage。
 - 不读取、使用或保存聊天中曾暴露的旧 API Key；任何 Key 都不得进入源码、Git、日志、测试快照、配置模板或安装包。
 - 发布产物、构建缓存、用户配置和日志不纳入版本管理。

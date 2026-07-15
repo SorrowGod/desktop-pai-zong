@@ -1,10 +1,17 @@
 using DesktopPet.App.Pet;
+using DesktopPet.App.Models;
 
 namespace DesktopPet.Tests;
 
 [TestClass]
 public sealed class PetLogicTests
 {
+    [TestMethod]
+    public void DefaultSettingsUseHalfSizePet()
+    {
+        Assert.AreEqual(1.0, new AppSettings().PetScale);
+    }
+
     [TestMethod]
     public void AffectionMeterClampsToValidRange()
     {

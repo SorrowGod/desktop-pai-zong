@@ -192,6 +192,12 @@ public partial class App : System.Windows.Application
         var bounds = _petWindow.GetPhysicalBounds();
         var position = PositionService.GetInitialPosition(_settings, bounds);
         _petWindow.MovePhysical(position.X, position.Y);
+        if (_settings.PetLeft != position.X || _settings.PetTop != position.Y)
+        {
+            _settings.PetLeft = position.X;
+            _settings.PetTop = position.Y;
+            _ = _settingsService?.SaveAsync(_settings);
+        }
     }
 
     private void TogglePet()

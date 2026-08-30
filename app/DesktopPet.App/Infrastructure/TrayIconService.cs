@@ -27,7 +27,7 @@ public sealed class TrayIconService : IDisposable
             ?? SystemIcons.Application;
         _notifyIcon = new NotifyIcon
         {
-            Text = "桌面派大星",
+            Text = "桌面派总",
             Icon = icon,
             ContextMenuStrip = menu,
             Visible = true

@@ -1,7 +1,7 @@
 <Window x:Class="DesktopPet.App.Windows.PetWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="DesktopPet"
+        Title="桌面派总"
         Width="128" Height="128"
         WindowStyle="None"
         ResizeMode="NoResize"

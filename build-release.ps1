@@ -99,7 +99,7 @@ try {
                 '.\installer\DesktopPet.iss'
         }
 
-        $installerPath = Join-Path $installerDirectory "DesktopPet-Setup-$Version-win-x64.exe"
+        $installerPath = Join-Path $installerDirectory "DesktopPaiZong-Setup-$Version-win-x64.exe"
         if (-not (Test-Path -LiteralPath $installerPath -PathType Leaf)) {
             throw "Inno Setup completed without the expected installer: $installerPath"
         }

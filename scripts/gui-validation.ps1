@@ -225,10 +225,10 @@ try {
     $primary = Start-Process -FilePath $executablePath -PassThru -Environment $environment
     $results.primaryPid = $primary.Id
     $pet = Wait-Until -Description 'PetWindow' -Condition {
-        Get-ProcessWindows $primary.Id | Where-Object { $_.Title -eq 'DesktopPet' } | Select-Object -First 1
+        Get-ProcessWindows $primary.Id | Where-Object { $_.Title -eq '桌面派总' } | Select-Object -First 1
     }
     Start-Sleep -Milliseconds 1000
-    $pet = Get-ProcessWindows $primary.Id | Where-Object { $_.Title -eq 'DesktopPet' } | Select-Object -First 1
+    $pet = Get-ProcessWindows $primary.Id | Where-Object { $_.Title -eq '桌面派总' } | Select-Object -First 1
     Set-ValidationStage 'pet-window-found'
     $results.petInitialBounds = $pet
     $results.petDpi = [GuiNative]::GetDpiForWindow($pet.Handle)
@@ -327,7 +327,7 @@ try {
 
     Invoke-MouseDrag $centerScreenX $centerScreenY -80 -40
     Start-Sleep -Milliseconds 500
-    $petAfterDrag = Get-ProcessWindows $primary.Id | Where-Object { $_.Title -eq 'DesktopPet' } | Select-Object -First 1
+    $petAfterDrag = Get-ProcessWindows $primary.Id | Where-Object { $_.Title -eq '桌面派总' } | Select-Object -First 1
     $results.drag = [ordered]@{
         before = $pet
         after = $petAfterDrag
@@ -357,7 +357,7 @@ try {
     Start-Sleep -Milliseconds 80
     Invoke-MouseClick $dragCenterX $dragCenterY
     $chat = Wait-Until -Description 'ChatWindow' -Condition {
-        Get-ProcessWindows $primary.Id | Where-Object { $_.Title -eq '和派大星聊天' } | Select-Object -First 1
+        Get-ProcessWindows $primary.Id | Where-Object { $_.Title -eq '桌面派总 · 和派大星聊天' } | Select-Object -First 1
     }
     Start-Sleep -Milliseconds 600
     $secondaryChatPid = Start-SecondaryCommand 'chat'
@@ -370,31 +370,31 @@ try {
     $results.chatScreenshot = Save-Screenshot 'chat-window.png' ([System.Drawing.Rectangle]::new($chat.Left, $chat.Top, $chat.Width, $chat.Height))
     [void][GuiNative]::PostMessage($chat.Handle, [GuiNative]::Close, [IntPtr]::Zero, [IntPtr]::Zero)
     [void](Wait-Until -Description 'closed ChatWindow' -Condition {
-        -not (Get-ProcessWindows $primary.Id | Where-Object { $_.Title -eq '和派大星聊天' })
+        -not (Get-ProcessWindows $primary.Id | Where-Object { $_.Title -eq '桌面派总 · 和派大星聊天' })
     })
     $results.chat.closedWithoutExitingPet = -not $primary.HasExited
     Set-ValidationStage 'chat-window-complete'
 
     $secondarySettingsPid = Start-SecondaryCommand 'settings'
     $settings = Wait-Until -Description 'SettingsWindow' -Condition {
-        Get-ProcessWindows $primary.Id | Where-Object { $_.Title -eq '桌面派大星设置' } | Select-Object -First 1
+        Get-ProcessWindows $primary.Id | Where-Object { $_.Title -eq '桌面派总设置' } | Select-Object -First 1
     }
     Start-Sleep -Milliseconds 600
     $results.settings = [ordered]@{ secondaryPid = $secondarySettingsPid; window = $settings }
     $results.settingsScreenshot = Save-Screenshot 'settings-window.png' ([System.Drawing.Rectangle]::new($settings.Left, $settings.Top, $settings.Width, $settings.Height))
     [void][GuiNative]::PostMessage($settings.Handle, [GuiNative]::Close, [IntPtr]::Zero, [IntPtr]::Zero)
     [void](Wait-Until -Description 'closed SettingsWindow' -Condition {
-        -not (Get-ProcessWindows $primary.Id | Where-Object { $_.Title -eq '桌面派大星设置' })
+        -not (Get-ProcessWindows $primary.Id | Where-Object { $_.Title -eq '桌面派总设置' })
     })
     $results.settings.closedWithoutExitingPet = -not $primary.HasExited
     Set-ValidationStage 'settings-window-complete'
 
     $secondaryHidePid = Start-SecondaryCommand 'hide'
     Start-Sleep -Milliseconds 300
-    $hidden = -not (Get-ProcessWindows $primary.Id | Where-Object { $_.Title -eq 'DesktopPet' })
+    $hidden = -not (Get-ProcessWindows $primary.Id | Where-Object { $_.Title -eq '桌面派总' })
     $secondaryShowPid = Start-SecondaryCommand 'show'
     $shownPet = Wait-Until -Description 'restored PetWindow' -Condition {
-        Get-ProcessWindows $primary.Id | Where-Object { $_.Title -eq 'DesktopPet' } | Select-Object -First 1
+        Get-ProcessWindows $primary.Id | Where-Object { $_.Title -eq '桌面派总' } | Select-Object -First 1
     }
     $results.visibility = [ordered]@{
         hideSecondaryPid = $secondaryHidePid
@@ -412,7 +412,7 @@ try {
         $command = switch ($iterations % 4) { 0 {'hide'} 1 {'show'} 2 {'chat'} default {'settings'} }
         [void](Start-SecondaryCommand $command)
         if (($iterations % 4) -eq 1) {
-            $loopPet = Get-ProcessWindows $primary.Id | Where-Object { $_.Title -eq 'DesktopPet' } | Select-Object -First 1
+            $loopPet = Get-ProcessWindows $primary.Id | Where-Object { $_.Title -eq '桌面派总' } | Select-Object -First 1
             if ($null -ne $loopPet) {
                 $direction = if (($iterations % 8) -eq 1) { 24 } else { -24 }
                 Invoke-MouseDrag ($loopPet.Left + [int]($loopPet.Width / 2)) ($loopPet.Top + [int]($loopPet.Height / 2)) $direction 12
@@ -428,11 +428,11 @@ try {
         primaryAlive = (-not $primary.HasExited)
         desktopPetProcessCount = @(Get-Process DesktopPet -ErrorAction SilentlyContinue).Count
     }
-    $petBeforeExit = Get-ProcessWindows $primary.Id | Where-Object { $_.Title -eq 'DesktopPet' } | Select-Object -First 1
+    $petBeforeExit = Get-ProcessWindows $primary.Id | Where-Object { $_.Title -eq '桌面派总' } | Select-Object -First 1
     if ($null -eq $petBeforeExit) {
         [void](Start-SecondaryCommand 'show')
         $petBeforeExit = Wait-Until -Description 'PetWindow before exit' -Condition {
-            Get-ProcessWindows $primary.Id | Where-Object { $_.Title -eq 'DesktopPet' } | Select-Object -First 1
+            Get-ProcessWindows $primary.Id | Where-Object { $_.Title -eq '桌面派总' } | Select-Object -First 1
         }
     }
     Set-ValidationStage 'stability-complete'
@@ -442,10 +442,10 @@ try {
     $results.primaryExitCode = if ($primary.HasExited) { $primary.ExitCode } else { $null }
     $restart = Start-Process -FilePath $executablePath -PassThru -Environment $environment
     $restoredPet = Wait-Until -Description 'restarted PetWindow' -Condition {
-        Get-ProcessWindows $restart.Id | Where-Object { $_.Title -eq 'DesktopPet' } | Select-Object -First 1
+        Get-ProcessWindows $restart.Id | Where-Object { $_.Title -eq '桌面派总' } | Select-Object -First 1
     }
     Start-Sleep -Milliseconds 1000
-    $restoredPet = Get-ProcessWindows $restart.Id | Where-Object { $_.Title -eq 'DesktopPet' } | Select-Object -First 1
+    $restoredPet = Get-ProcessWindows $restart.Id | Where-Object { $_.Title -eq '桌面派总' } | Select-Object -First 1
     $results.positionRestore = [ordered]@{
         expectedLeft = $petBeforeExit.Left
         expectedTop = $petBeforeExit.Top

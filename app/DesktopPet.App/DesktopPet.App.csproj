@@ -9,6 +9,9 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Assets\DesktopPet.ico</ApplicationIcon>
     <AssemblyName>DesktopPet</AssemblyName>
+    <Product>桌面派总</Product>
+    <Title>桌面派总</Title>
+    <Description>桌面派总：基于 .NET 8 / WPF 的派大星风格桌面宠物</Description>
     <RootNamespace>DesktopPet.App</RootNamespace>
     <Version>1.0.0</Version>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>

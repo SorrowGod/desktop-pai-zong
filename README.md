@@ -1,4 +1,4 @@
-# 桌面派大星（.NET 8 / WPF）
+# 桌面派总（.NET 8 / WPF）
 
 这是一个使用 C#、.NET 8 和原生 WPF 从头重构的 Windows 桌宠。新版不使用 WebView2、透明网页、白色色键、全屏透明窗口、鼠标轮询或阻塞式拖拽。
 
@@ -100,7 +100,7 @@ GUI 回归脚本：
 
 ```text
 artifacts\release\publish\DesktopPet.exe
-artifacts\release\installer\DesktopPet-Setup-1.0.0-win-x64.exe
+artifacts\release\installer\DesktopPaiZong-Setup-1.0.0-win-x64.exe
 artifacts\release\test-results\desktop-pet-release-tests.trx
 artifacts\release\checksums.sha256
 artifacts\release\build-release.log

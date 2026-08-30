@@ -108,7 +108,7 @@ D:\TestMimo\
 - `build-release.ps1` 严格依次执行 restore、test、publish、Inno Setup；设置错误终止，任一步失败即停止且不报告伪成功。
 - Inno Setup 6 当前用户安装到 `%LOCALAPPDATA%\Programs\DesktopPet`，创建桌面与开始菜单快捷方式，支持覆盖升级和标准卸载。
 - 卸载删除程序与 DesktopPet 开机启动项，默认保留 `%LOCALAPPDATA%\DesktopPet` 用户设置；提供可选清理说明。
-- 生成自包含单文件 EXE 和安装包，并报告 EXE、安装包与验证日志的绝对路径、哈希和测试结论。
+- 生成自包含单文件 EXE 和 `DesktopPaiZong-Setup` 安装包，并报告 EXE、安装包与验证日志的绝对路径、哈希和测试结论。
 - 自动验证通过后保持 `rewrite/wpf` 分支和旧项目共存，明确列出仍需用户亲自完成的实际视觉、交互与真实 API 验收项。
 
 ## 12. 里程碑提交建议

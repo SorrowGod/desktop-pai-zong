@@ -41,7 +41,7 @@ public partial class App : System.Windows.Application
         DispatcherUnhandledException += (_, args) =>
         {
             _logger.Error("Unhandled UI exception.", args.Exception);
-            System.Windows.MessageBox.Show("桌面派大星遇到错误，详情已写入日志。", "桌面派大星", MessageBoxButton.OK, MessageBoxImage.Error);
+            System.Windows.MessageBox.Show("桌面派总遇到错误，详情已写入日志。", "桌面派总", MessageBoxButton.OK, MessageBoxImage.Error);
             args.Handled = true;
         };
 
@@ -294,8 +294,8 @@ public partial class App : System.Windows.Application
     private void ShowAbout()
     {
         System.Windows.MessageBox.Show(
-            "桌面派大星 1.0\n.NET 8 · WPF · 原生透明窗口\n\nAPI Key 仅使用 Windows DPAPI CurrentUser 加密保存在本机。",
-            "关于桌面派大星",
+            "桌面派总 1.0\n.NET 8 · WPF · 原生透明窗口\n\nAPI Key 仅使用 Windows DPAPI CurrentUser 加密保存在本机。",
+            "关于桌面派总",
             MessageBoxButton.OK,
             MessageBoxImage.Information);
     }

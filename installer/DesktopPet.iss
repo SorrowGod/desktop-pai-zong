@@ -8,9 +8,9 @@
   #define AppVersion "1.0.0"
 #endif
 
-#define AppName "桌面派大星"
+#define AppName "桌面派总"
 #define AppExeName "DesktopPet.exe"
-#define PublisherName "DesktopPet"
+#define PublisherName "桌面派总"
 
 [Setup]
 AppId={{6DC696BA-85E1-495C-86B9-2E5DD0248AD6}
@@ -26,7 +26,7 @@ PrivilegesRequired=lowest
 ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 OutputDir={#OutputDir}
-OutputBaseFilename=DesktopPet-Setup-{#AppVersion}-win-x64
+OutputBaseFilename=DesktopPaiZong-Setup-{#AppVersion}-win-x64
 SetupIconFile=..\app\DesktopPet.App\Assets\DesktopPet.ico
 UninstallDisplayIcon={app}\{#AppExeName}
 Compression=lzma2/max

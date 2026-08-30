@@ -41,7 +41,7 @@ public partial class App : System.Windows.Application
         DispatcherUnhandledException += (_, args) =>
         {
             _logger.Error("Unhandled UI exception.", args.Exception);
-            System.Windows.MessageBox.Show("桌面猫咪遇到错误，详情已写入日志。", "桌面猫咪", MessageBoxButton.OK, MessageBoxImage.Error);
+            System.Windows.MessageBox.Show("桌面派大星遇到错误，详情已写入日志。", "桌面派大星", MessageBoxButton.OK, MessageBoxImage.Error);
             args.Handled = true;
         };
 
@@ -120,16 +120,16 @@ public partial class App : System.Windows.Application
         _petWindow.SingleClicked += (_, _) =>
         {
             _logger?.Info("Pet single click received.");
-            HandleInteraction(1, PetAnimationState.Reaction, "喵~", "我在这里！", "今天也要开心呀~");
+            HandleInteraction(1, PetAnimationState.Reaction, "哇哦！是你！", "派大星在这里！", "今天也要开心呀~");
         };
         _petWindow.DoubleClicked += (_, _) =>
         {
             _logger?.Info("Pet double click received.");
             OpenChat();
         };
-        _petWindow.FeedRequested += (_, _) => HandleInteraction(5, PetAnimationState.Happy, "好香呀，喵！", "吃饱啦~");
-        _petWindow.PetRequested += (_, _) => HandleInteraction(3, PetAnimationState.Happy, "呼噜呼噜…", "再摸一下嘛~");
-        _petWindow.PlayRequested += (_, _) => HandleInteraction(8, PetAnimationState.Walk, "一起玩！", "看我原地散步~");
+        _petWindow.FeedRequested += (_, _) => HandleInteraction(5, PetAnimationState.Happy, "好吃到转圈圈！", "谢谢你投喂派大星~", "肚肚圆滚滚啦！");
+        _petWindow.PetRequested += (_, _) => HandleInteraction(3, PetAnimationState.Happy, "软绵绵地抱一下~", "派大星喜欢被摸摸！", "再来一下嘛~");
+        _petWindow.PlayRequested += (_, _) => HandleInteraction(8, PetAnimationState.Walk, "一起去比奇堡散步！", "派大星要开始摇摆啦！", "看我的海星步！");
         _petWindow.ChatRequested += (_, _) => OpenChat();
         _petWindow.SettingsRequested += (_, _) => OpenSettings();
         _petWindow.HideRequested += (_, _) => HidePet();
@@ -294,8 +294,8 @@ public partial class App : System.Windows.Application
     private void ShowAbout()
     {
         System.Windows.MessageBox.Show(
-            "桌面猫咪 1.0\n.NET 8 · WPF · 原生透明窗口\n\nAPI Key 仅使用 Windows DPAPI CurrentUser 加密保存在本机。",
-            "关于桌面猫咪",
+            "桌面派大星 1.0\n.NET 8 · WPF · 原生透明窗口\n\nAPI Key 仅使用 Windows DPAPI CurrentUser 加密保存在本机。",
+            "关于桌面派大星",
             MessageBoxButton.OK,
             MessageBoxImage.Information);
     }

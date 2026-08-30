@@ -13,6 +13,17 @@ public sealed class PetLogicTests
     }
 
     [TestMethod]
+    public void DefaultSettingsUsePatrickIdentity()
+    {
+        var settings = new AppSettings();
+
+        Assert.AreEqual("派大星", settings.PetName);
+        settings.PetName = " ";
+        settings.Normalize();
+        Assert.AreEqual("派大星", settings.PetName);
+    }
+
+    [TestMethod]
     public void AffectionMeterClampsToValidRange()
     {
         var meter = new AffectionMeter(99);

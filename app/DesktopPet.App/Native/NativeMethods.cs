@@ -165,7 +165,7 @@ internal static class AlphaRegionBuilder
             transferred = NativeMethods.SetWindowRgn(handle, destination, true) != 0;
             if (!transferred)
             {
-                throw new Win32Exception(Marshal.GetLastWin32Error(), "无法应用猫咪 Alpha 窗口区域。");
+                throw new Win32Exception(Marshal.GetLastWin32Error(), "无法应用派大星 Alpha 窗口区域。");
             }
         }
         finally

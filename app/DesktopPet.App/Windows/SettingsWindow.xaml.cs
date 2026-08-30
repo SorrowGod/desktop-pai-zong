@@ -223,7 +223,7 @@ public partial class SettingsWindow : Window
         var selectedScale = (PetScaleBox.SelectedItem as ComboBoxItem)?.Tag?.ToString();
         if (!double.TryParse(selectedScale, NumberStyles.Float, CultureInfo.InvariantCulture, out var scale))
         {
-            error = "请选择有效的猫咪大小。";
+            error = "请选择有效的派大星大小。";
             return false;
         }
 

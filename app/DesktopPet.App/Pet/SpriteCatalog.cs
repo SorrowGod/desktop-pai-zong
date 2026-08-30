@@ -16,8 +16,8 @@ public sealed class SpriteCatalog
     public SpriteCatalog()
     {
         var resource = System.Windows.Application.GetResourceStream(
-                new Uri("/DesktopPet;component/Assets/cat-sprites.png", UriKind.Relative))
-            ?? throw new InvalidOperationException("找不到嵌入的猫咪精灵图。");
+                new Uri("/DesktopPet;component/Assets/patrick-sprites.png", UriKind.Relative))
+            ?? throw new InvalidOperationException("找不到嵌入的派大星精灵图。");
         using var stream = resource.Stream;
         var decoder = new PngBitmapDecoder(stream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
         _sheet = decoder.Frames[0];

@@ -349,12 +349,15 @@ try {
     [GuiNative]::keybd_event([GuiNative]::Escape, 0, 0, [UIntPtr]::Zero)
     [GuiNative]::keybd_event([GuiNative]::Escape, 0, [GuiNative]::KeyUp, [UIntPtr]::Zero)
     Set-ValidationStage 'context-menu-complete'
+    # Let the native context menu finish closing before the double-click probe;
+    # otherwise the first synthetic click can be consumed by menu dismissal.
+    Start-Sleep -Milliseconds 250
 
     Invoke-MouseClick $dragCenterX $dragCenterY
     Start-Sleep -Milliseconds 80
     Invoke-MouseClick $dragCenterX $dragCenterY
     $chat = Wait-Until -Description 'ChatWindow' -Condition {
-        Get-ProcessWindows $primary.Id | Where-Object { $_.Title -eq '和猫咪聊天' } | Select-Object -First 1
+        Get-ProcessWindows $primary.Id | Where-Object { $_.Title -eq '和派大星聊天' } | Select-Object -First 1
     }
     Start-Sleep -Milliseconds 600
     $secondaryChatPid = Start-SecondaryCommand 'chat'
@@ -367,21 +370,21 @@ try {
     $results.chatScreenshot = Save-Screenshot 'chat-window.png' ([System.Drawing.Rectangle]::new($chat.Left, $chat.Top, $chat.Width, $chat.Height))
     [void][GuiNative]::PostMessage($chat.Handle, [GuiNative]::Close, [IntPtr]::Zero, [IntPtr]::Zero)
     [void](Wait-Until -Description 'closed ChatWindow' -Condition {
-        -not (Get-ProcessWindows $primary.Id | Where-Object { $_.Title -eq '和猫咪聊天' })
+        -not (Get-ProcessWindows $primary.Id | Where-Object { $_.Title -eq '和派大星聊天' })
     })
     $results.chat.closedWithoutExitingPet = -not $primary.HasExited
     Set-ValidationStage 'chat-window-complete'
 
     $secondarySettingsPid = Start-SecondaryCommand 'settings'
     $settings = Wait-Until -Description 'SettingsWindow' -Condition {
-        Get-ProcessWindows $primary.Id | Where-Object { $_.Title -eq '桌面猫咪设置' } | Select-Object -First 1
+        Get-ProcessWindows $primary.Id | Where-Object { $_.Title -eq '桌面派大星设置' } | Select-Object -First 1
     }
     Start-Sleep -Milliseconds 600
     $results.settings = [ordered]@{ secondaryPid = $secondarySettingsPid; window = $settings }
     $results.settingsScreenshot = Save-Screenshot 'settings-window.png' ([System.Drawing.Rectangle]::new($settings.Left, $settings.Top, $settings.Width, $settings.Height))
     [void][GuiNative]::PostMessage($settings.Handle, [GuiNative]::Close, [IntPtr]::Zero, [IntPtr]::Zero)
     [void](Wait-Until -Description 'closed SettingsWindow' -Condition {
-        -not (Get-ProcessWindows $primary.Id | Where-Object { $_.Title -eq '桌面猫咪设置' })
+        -not (Get-ProcessWindows $primary.Id | Where-Object { $_.Title -eq '桌面派大星设置' })
     })
     $results.settings.closedWithoutExitingPet = -not $primary.HasExited
     Set-ValidationStage 'settings-window-complete'

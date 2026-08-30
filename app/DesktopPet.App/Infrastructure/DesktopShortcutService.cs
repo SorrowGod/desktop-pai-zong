@@ -10,7 +10,7 @@ public sealed class DesktopShortcutService
         var executable = Environment.ProcessPath
             ?? throw new InvalidOperationException("无法读取当前可执行文件路径。");
         var desktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-        var shortcutPath = Path.Combine(desktop, "桌面猫咪.lnk");
+        var shortcutPath = Path.Combine(desktop, "桌面派大星.lnk");
         var shellType = Type.GetTypeFromProgID("WScript.Shell")
             ?? throw new InvalidOperationException("系统不支持 Windows Script Host 快捷方式接口。");
         var shell = Activator.CreateInstance(shellType)
@@ -33,7 +33,7 @@ public sealed class DesktopShortcutService
             shortcutType.InvokeMember("TargetPath", BindingFlags.SetProperty, null, shortcut, [executable]);
             shortcutType.InvokeMember("WorkingDirectory", BindingFlags.SetProperty, null, shortcut, [Path.GetDirectoryName(executable)!]);
             shortcutType.InvokeMember("IconLocation", BindingFlags.SetProperty, null, shortcut, [$"{executable},0"]);
-            shortcutType.InvokeMember("Description", BindingFlags.SetProperty, null, shortcut, ["桌面猫咪"]);
+            shortcutType.InvokeMember("Description", BindingFlags.SetProperty, null, shortcut, ["桌面派大星"]);
             shortcutType.InvokeMember("Save", BindingFlags.InvokeMethod, null, shortcut, null);
             Marshal.FinalReleaseComObject(shortcut);
         }

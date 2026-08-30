@@ -8,7 +8,7 @@
   #define AppVersion "1.0.0"
 #endif
 
-#define AppName "桌面猫咪"
+#define AppName "桌面派大星"
 #define AppExeName "DesktopPet.exe"
 #define PublisherName "DesktopPet"
 

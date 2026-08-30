@@ -20,6 +20,6 @@
     <PublishTrimmed>false</PublishTrimmed>
   </PropertyGroup>
   <ItemGroup>
-    <Resource Include="Assets\cat-sprites.png" />
+    <Resource Include="Assets\patrick-sprites.png" />
   </ItemGroup>
 </Project>

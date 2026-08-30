@@ -1,7 +1,7 @@
 <Window x:Class="DesktopPet.App.Windows.SettingsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="桌面猫咪设置"
+        Title="桌面派大星设置"
         Width="620" Height="760"
         MinWidth="520" MinHeight="640"
         WindowStartupLocation="CenterScreen"
@@ -16,11 +16,11 @@
       </Grid.RowDefinitions>
 
       <StackPanel Grid.Row="0">
-        <TextBlock Text="桌面猫咪设置" FontSize="24" FontWeight="SemiBold" Foreground="{StaticResource TextBrush}" />
+        <TextBlock Text="桌面派大星设置" FontSize="24" FontWeight="SemiBold" Foreground="{StaticResource TextBrush}" />
         <TextBlock Text="配置保存在当前用户本地目录；API Key 使用 Windows DPAPI 加密。" Foreground="#796E7D" Margin="0,4,0,16" />
       </StackPanel>
 
-      <GroupBox Grid.Row="1" Header="猫咪" Margin="0,0,0,14" Padding="14">
+      <GroupBox Grid.Row="1" Header="派大星" Margin="0,0,0,14" Padding="14">
         <Grid>
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />

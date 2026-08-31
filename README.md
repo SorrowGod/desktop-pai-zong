@@ -2,7 +2,7 @@
 
 这是一个使用 C#、.NET 8 和原生 WPF 从头重构的 Windows 桌宠。新版不使用 WebView2、透明网页、白色色键、全屏透明窗口、鼠标轮询或阻塞式拖拽。
 
-当前默认分支是 `rewrite/wpf`。旧 Tauri/Vite/Rust 源码已从当前工作树移除，并继续通过 `main` 分支和 `legacy-tauri-v1` 标签留档；当前 WPF 项目不依赖 Node.js、Vite、Rust 或 Tauri。
+当前默认分支是 `main`，发布代码为桌面派总的 .NET 8 / WPF 实现；`wpf` 分支用于后续 WPF 开发。旧 Tauri/Vite/Rust 源码已从当前工作树移除，仅通过 `legacy-tauri-v1` 标签留档；当前 WPF 项目不依赖 Node.js、Vite、Rust 或 Tauri。
 
 ## 功能
 
@@ -114,4 +114,4 @@ artifacts\release\build-release.log
 - 仓库和发布包不包含 API Key。
 - 真实百炼 `qwen3.6-flash` 调用必须由用户之后在设置页填写新 Key 后验证；开发过程没有复用任何旧 Key。
 - 当前机器实际 GUI 验证 DPI 为 96（100%）；125%/150% 使用与运行时相同的 Alpha 缩放几何自动测试覆盖。若验收机器有 125%/150% 显示器，还应进行一次实际目视复核。
-- 自动测试通过不等于用户实际验收。旧 Tauri 源码已按用户要求从当前工作树移除，历史版本仍可从 `main` 分支和 `legacy-tauri-v1` 标签取回。
+- 自动测试通过不等于用户实际验收。旧 Tauri 源码已按用户要求从当前工作树移除，历史版本仍可从 `legacy-tauri-v1` 标签取回。

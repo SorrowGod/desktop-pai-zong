@@ -4,7 +4,7 @@
 
 - 在 `D:\TestMimo` 中使用 C#、.NET 8、原生 WPF 从头实现稳定、完整、可安装的 Windows 桌宠。
 - 不延续旧 Tauri/Vite/Rust 的透明 WebView、白色色键、全屏透明窗、光标轮询或阻塞式拖拽方案。
-- 旧 Tauri/Vite/Rust 源码通过 `main` 分支和 `legacy-tauri-v1` 标签留档，不再保留在当前 WPF 工作树中。
+- 旧 Tauri/Vite/Rust 源码仅通过 `legacy-tauri-v1` 标签留档；当前 `main` 是 WPF 发布主线，`wpf` 是 WPF 开发分支。
 - 首次启动使用 `%LOCALAPPDATA%\DesktopPet` 下的全新配置，不迁移旧 WebView localStorage。
 - 不读取、使用或保存聊天中曾暴露的旧 API Key；任何 Key 都不得进入源码、Git、日志、测试快照、配置模板或安装包。
 - 发布产物、构建缓存、用户配置和日志不纳入版本管理。
@@ -16,7 +16,7 @@
 3. 创建严格 `.gitignore`，至少排除 `node_modules`、`dist`、`target`、`.codex-target*`、`bin`、`obj`、`publish`、安装包输出、日志、用户配置、Key 和密钥文件。
 4. 在提交前扫描 `sk-`、`sk-ws-`、Bearer Token 及疑似密钥。
 5. 第一个提交为 `chore: snapshot legacy Tauri implementation`，并创建 `legacy-tauri-v1` 标签。
-6. 创建并切换 `rewrite/wpf` 分支；按独立功能节点使用 Conventional Commits。
+6. 创建并切换 `wpf` 分支；按独立功能节点使用 Conventional Commits。
 7. 用户明确完成实际验收前，不删除旧项目、不合并到 `main`、不创建 `v1.0.0` 标签。
 8. 用户验收后才执行旧版清理、完整回归、合并、README/CHANGELOG 最终更新和 `v1.0.0` 标记。
 
@@ -109,7 +109,7 @@ D:\TestMimo\
 - Inno Setup 6 当前用户安装到 `%LOCALAPPDATA%\Programs\DesktopPet`，创建桌面与开始菜单快捷方式，支持覆盖升级和标准卸载。
 - 卸载删除程序与 DesktopPet 开机启动项，默认保留 `%LOCALAPPDATA%\DesktopPet` 用户设置；提供可选清理说明。
 - 生成自包含单文件 EXE 和 `DesktopPaiZong-Setup` 安装包，并报告 EXE、安装包与验证日志的绝对路径、哈希和测试结论。
-- 自动验证通过后保持 `rewrite/wpf` 分支和旧项目共存，明确列出仍需用户亲自完成的实际视觉、交互与真实 API 验收项。
+- 自动验证通过后保持 `wpf` 分支和 `legacy-tauri-v1` 标签，明确列出仍需用户亲自完成的实际视觉、交互与真实 API 验收项。
 
 ## 12. 里程碑提交建议
 
